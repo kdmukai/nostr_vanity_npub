@@ -50,10 +50,12 @@ class BruteForceThread(Thread):
             npub = pk.public_key.bech32()[5:]   # Trim the "npub1" prefix
 
             if npub[:len(target)] != target and (include_end is False or (include_end and npub[-1*len(target):] != target)):
-                increment_check = 1e6
-                if i % increment_check == 0:
-                    self.threadsafe_counter.increment(increment_check)
-                    print(f"Tried {int(self.threadsafe_counter.cur_count):,} npubs so far", flush=True)
+                if i % 1e5 == 0:
+                    # Accumulate every 1e5...
+                    self.threadsafe_counter.increment(1e5)
+                    if self.threadsafe_counter.cur_count % 1e6 == 0:
+                        # ...but update to stdout every 1e6
+                        print(f"Tried {int(self.threadsafe_counter.cur_count):,} npubs so far", flush=True)
                 continue
             
             print(f"\n{i:,} | {(time.time() - start):0.1f}s | npub1{npub}")
