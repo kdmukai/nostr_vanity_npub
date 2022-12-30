@@ -29,6 +29,8 @@ At 8 or 9+ characters you're going to need a *considerable* amount of work to yi
 ## Search is random!
 You may have found a 5-character `npub` in 200s but the exact same 5-character target could take you 10x longer on the next run. It's just like bitcoin mining; the probabilities are one thing but there are no guarantees about your luck in any given run.
 
+Also note that you can stop a vanity `npub` search and restart it later. You're not wasting any work; it'll just keep searching new random `npub`s when you resume.
+
 ## Is this secure?
 Quick version: No, you shouldn't blindly trust any private key generator you found online.
 
