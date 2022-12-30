@@ -3,6 +3,7 @@
 
     https://github.com/kdmukai/nostr_vanity_npub
 """
+import datetime
 from threading import Event, Lock, Thread
 from nostr.key import PrivateKey
 
@@ -50,16 +51,20 @@ class BruteForceThread(Thread):
             npub = pk.public_key.bech32()[5:]   # Trim the "npub1" prefix
 
             if npub[:len(target)] != target and (include_end is False or (include_end and npub[-1*len(target):] != target)):
+                # Didn't match
                 if i % 1e5 == 0:
                     # Accumulate every 1e5...
                     self.threadsafe_counter.increment(1e5)
                     if self.threadsafe_counter.cur_count % 1e6 == 0:
                         # ...but update to stdout every 1e6
-                        print(f"Tried {int(self.threadsafe_counter.cur_count):,} npubs so far", flush=True)
+                        print(f"{str(datetime.datetime.now())}: Tried {int(self.threadsafe_counter.cur_count):,} npubs so far", flush=True)
                 continue
             
-            print(f"\n{i:,} | {(time.time() - start):0.1f}s | npub1{npub}")
+            # Found our match!
+            print(f"\n{int(self.threadsafe_counter.cur_count):,} | {(time.time() - start):0.1f}s | npub1{npub}")
             self.pk = pk
+
+            # Set the shared Event to signal to the other threads to exit
             self.event.set()
             break
 
@@ -126,7 +131,7 @@ if __name__ == "__main__":
     
     print(f"Initialized {num_jobs} threads")
 
-    print("Working...")
+    print(f"{str(datetime.datetime.now())}: Starting")
 
     # Block until the first thread exits; after one thread finds a match, it will set the
     #   Event and all threads will exit.
