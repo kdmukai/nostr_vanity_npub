@@ -48,6 +48,8 @@ positional arguments:
 optional arguments:
   -h, --help         show this help message and exit
   -e, --include-end  Also search the end of the npub
+  -j NUM_JOBS, --jobs NUM_JOBS
+                        Number of threads (default: 4)
 ```
 
 ## Limitations
@@ -79,7 +81,7 @@ Also note that you can stop a vanity `npub` search and restart it later. You're 
 
 
 ## Performance
-On an M1 Macbook Pro:
+Single-threaded on an M1 Macbook Pro:
 ```
 1876.9s: Tried 18,000,000 npubs so far
 1981.2s: Tried 19,000,000 npubs so far
@@ -87,7 +89,19 @@ On an M1 Macbook Pro:
 2189.9s: Tried 21,000,000 npubs so far
 ```
 
-Expect a 5-char vanity target to take a couple million tries.
+A 5-char vanity target could easily take tens of millions of tries.
+
+Run with a `-j` setting that matches your CPU's threading abilities:
+```
+# Brute force w/eight threads
+python3 vanity_npub.py -j 8 n0str
+
+# Maximize threads on linux:
+python3 vanity_npub.py -j "$(($(nproc)+1))" n0str
+
+# Maximize threads on macOS:
+python3 vanity_npub.py -j "$(($(sysctl -n hw.physicalcpu)+1))" n0str
+```
 
 
 ## Is this secure?
