@@ -1,8 +1,10 @@
 # Nostr Vanity `npub` Generator
 
-Will brute-force search for a given `npub` target prefix:
+Python-based brute-force search for a given vanity `npub` target.
 
-```bash
+
+## Example 1
+```
 python3 vanity_npub.py h0dl
 ```
 
@@ -22,6 +24,32 @@ On success, it will print:
 This reports the number of `npubs` it brute-force generated in order to find one with a matching prefix, the elapsed time in seconds, the successful `npub`, and its associated private key/`nsec`.
 
 
+## Example 2
+Search for "h0dl" at the beginning or the end of the `npub`:
+```
+python3 vanity_npub.py -e h0dl
+> 1,026,042 | 103.0s | npub1y3ukxwznzysahdpnhrzgntal8kvmmd7uhx3k6klzzvaemm6nmwdse9h0dl
+```
+
+
+## Usage
+```
+usage: vanity_npub.py [-h] [-e] target
+
+********************** Nostr vanity pubkey generator **********************
+
+Search for `target` in an npub such that:
+
+        npub1[target]acd023...
+
+positional arguments:
+  target             The string you're looking for
+
+optional arguments:
+  -h, --help         show this help message and exit
+  -e, --include-end  Also search the end of the npub
+```
+
 ## Limitations
 `npub`s can only include characters from the bech32 list:
 ```
@@ -34,6 +62,8 @@ python vanity_npub.py bitcoin
 > ERROR: "b" is not a valid character (not in the bech32 charset)
 >         bech32 chars: 023456789acdefghjklmnpqrstuvwxyz
 ```
+
+---
 
 
 ## Search is exponential!
