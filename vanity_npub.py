@@ -31,8 +31,8 @@ if __name__ == "__main__":
     from nostr import bech32
     parser = argparse.ArgumentParser(
         description="********************** Nostr vanity pubkey generator **********************\n\n" + \
-            "Search for `target_string` such that:\n\n" + \
-            "\tnpub1[target_string]abc123...",
+            "Search for `target` in an npub such that:\n\n" + \
+            "\tnpub1[target]acd023...",
         formatter_class=argparse.RawTextHelpFormatter,
     )
 
