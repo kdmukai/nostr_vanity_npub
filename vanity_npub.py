@@ -7,7 +7,7 @@ import time
 from nostr.key import PrivateKey
 
 
-def find_vanity_npub(target: str):
+def find_vanity_npub(target: str, include_end: bool = False):
     start = time.time()
     i = 0
     while True:
@@ -15,7 +15,7 @@ def find_vanity_npub(target: str):
         pk = PrivateKey()
         npub = pk.public_key.bech32()[5:]   # Trim the "npub1" prefix
 
-        if npub[:len(target)] != target:
+        if npub[:len(target)] != target and (include_end is False or (include_end and npub[-1*len(target):] != target)):
             if i % 1e6 == 0:
                 print(f"{(time.time() - start):0.1f}s: Tried {i:,} npubs so far")
             continue
@@ -40,8 +40,16 @@ if __name__ == "__main__":
     parser.add_argument('target', type=str,
                         help="The string you're looking for")
 
+    # Optional switches
+    parser.add_argument('-e', '--include-end',
+                        action="store_true",
+                        default=False,
+                        dest="include_end",
+                        help="Also search the end of the npub")
+
     args = parser.parse_args()
     target = args.target.lower()
+    include_end = args.include_end
 
     for i in range(0, len(target)):
         if target[i] not in bech32.CHARSET:
@@ -57,5 +65,5 @@ if __name__ == "__main__":
             "Working..."
         )
 
-    pk = find_vanity_npub(target)
+    pk = find_vanity_npub(target, include_end=include_end)
     print(f"""\n\t{"*"*76}\n\tPrivate key: {pk.bech32()}\n\t{"*"*76}\n""")
