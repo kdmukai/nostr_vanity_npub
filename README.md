@@ -21,15 +21,45 @@ On success, it will print:
 
 This reports the number of `npubs` it brute-force generated in order to find one with a matching prefix, the elapsed time in seconds, the successful `npub`, and its associated private key/`nsec`.
 
+
+## Limitations
+`npub`s can only include characters from the bech32 list:
+```
+023456789acdefghjklmnpqrstuvwxyz
+```
+
+You'll get an error if you enter a vanity target that includes an unsupported character.
+```
+python vanity_npub.py bitcoin
+> ERROR: "b" is not a valid character (not in the bech32 charset)
+>         bech32 chars: 023456789acdefghjklmnpqrstuvwxyz
+```
+
+
 ## Search is exponential!
 I can't do the probability math, but searching for a target string that's 6-chars long is exponentially harder than finding one that's 5-chars long. And then a target string that's 7-chars long is exponentially harder than 6. And so on.
 
 At 8 or 9+ characters you're going to need a *considerable* amount of work to yield a match. Days? Weeks?
 
+
 ## Search is random!
 You may have found a 5-character `npub` in 200s but the exact same 5-character target could take you 10x longer on the next run. It's just like bitcoin mining; the probabilities are one thing but there are no guarantees about your luck in any given run.
 
 Also note that you can stop a vanity `npub` search and restart it later. You're not wasting any work; it'll just keep searching new random `npub`s when you resume.
+
+
+## Performance
+On an M1 Macbook Pro:
+```
+100.5s: Tried 1,000,000 npubs so far
+200.9s: Tried 2,000,000 npubs so far
+300.6s: Tried 3,000,000 npubs so far
+400.8s: Tried 4,000,000 npubs so far
+500.9s: Tried 5,000,000 npubs so far
+```
+
+Expect a 5-char vanity target to take a couple million tries.
+
 
 ## Is this secure?
 Quick version: No, you shouldn't blindly trust any private key generator you found online.
@@ -54,6 +84,8 @@ python3 vanity_npub.py hfsp
 
 The `npub` is 58-characters long (not including the "npub1" prefix). That is more than enough randomness to make it effectively impossible for any two people to yield the exact same complete `npub` when searching for the same vanity prefix.
 
+---
+
 ## Installation
 Requires python3.6+
 
@@ -62,19 +94,4 @@ Clone this repo or just copy the [vanity_npub.py](vanity_npub.py) script to your
 Install [python-nostr](https://github.com/jeffthibault/python-nostr) dependency:
 ```
 pip3 install python-nostr
-```
-
-## Performance
-On an M1 Macbook Pro:
-```
-100.5s: Tried 1,000,000 npubs so far
-200.9s: Tried 2,000,000 npubs so far
-300.6s: Tried 3,000,000 npubs so far
-400.8s: Tried 4,000,000 npubs so far
-500.9s: Tried 5,000,000 npubs so far
-```
-
-## Valid npub/bech32 chars
-```
-023456789acdefghjklmnpqrstuvwxyz
 ```
