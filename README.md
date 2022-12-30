@@ -116,11 +116,18 @@ The `npub` is 58-characters long (not including the "npub1" prefix). That is mor
 ---
 
 ## Installation
-Requires python3.6+
+Requires:
+* python3.6+
+* git
 
-Clone this repo or just copy the [vanity_npub.py](vanity_npub.py) script to your machine.
-
-Install [python-nostr](https://github.com/jeffthibault/python-nostr) dependency:
+Clone this repo:
 ```
-pip3 install python-nostr
+git clone https://github.com/kdmukai/nostr_vanity_npub.git
+cd nostr_vanity_npub
+```
+
+Clone the [python-nostr](https://github.com/jeffthibault/python-nostr) dependency:
+```
+git clone https://github.com/jeffthibault/python-nostr.git
+pip install -e python-nostr
 ```
