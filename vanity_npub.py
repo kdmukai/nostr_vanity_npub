@@ -52,9 +52,9 @@ class BruteForceThread(Thread):
 
             if npub[:len(target)] != target and (include_end is False or (include_end and npub[-1*len(target):] != target)):
                 # Didn't match
-                if i % 1e5 == 0:
-                    # Accumulate every 1e5...
-                    self.threadsafe_counter.increment(1e5)
+                if i % 1e4 == 0:
+                    # Accumulate every 1e4...
+                    self.threadsafe_counter.increment(1e4)
                     if self.threadsafe_counter.cur_count % 1e6 == 0:
                         # ...but update to stdout every 1e6
                         print(f"{str(datetime.datetime.now())}: Tried {int(self.threadsafe_counter.cur_count):,} npubs so far", flush=True)
