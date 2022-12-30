@@ -50,7 +50,7 @@ class BruteForceThread(Thread):
             npub = pk.public_key.bech32()[5:]   # Trim the "npub1" prefix
 
             if npub[:len(target)] != target and (include_end is False or (include_end and npub[-1*len(target):] != target)):
-                increment_check = 1e5
+                increment_check = 1e6
                 if i % increment_check == 0:
                     self.threadsafe_counter.increment(increment_check)
                     print(f"Tried {int(self.threadsafe_counter.cur_count):,} npubs so far", flush=True)
@@ -109,8 +109,7 @@ if __name__ == "__main__":
         # 
         print(
             "This will probably take a LONG time!\n\n" + \
-            "\tTip: CTRL-C to abort.\n\n" + \
-            "Working..."
+            "\tTip: CTRL-C to abort.\n\n"
         )
 
     start = time.time()
@@ -124,6 +123,8 @@ if __name__ == "__main__":
         threads.append(brute_force_thread)
     
     print(f"Initialized {num_jobs} threads")
+
+    print("Working...")
 
     # Block until the first thread exits; after one thread finds a match, it will set the
     #   Event and all threads will exit.
