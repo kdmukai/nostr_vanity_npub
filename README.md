@@ -81,11 +81,10 @@ Also note that you can stop a vanity `npub` search and restart it later. You're 
 ## Performance
 On an M1 Macbook Pro:
 ```
-100.5s: Tried 1,000,000 npubs so far
-200.9s: Tried 2,000,000 npubs so far
-300.6s: Tried 3,000,000 npubs so far
-400.8s: Tried 4,000,000 npubs so far
-500.9s: Tried 5,000,000 npubs so far
+1876.9s: Tried 18,000,000 npubs so far
+1981.2s: Tried 19,000,000 npubs so far
+2085.5s: Tried 20,000,000 npubs so far
+2189.9s: Tried 21,000,000 npubs so far
 ```
 
 Expect a 5-char vanity target to take a couple million tries.
