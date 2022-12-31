@@ -46,7 +46,7 @@ python3 vanity_npub.py nakam0t0 -b h0dler,h0rnet
 
 ## Usage
 ```
-usage: vanity_npub.py [-h] [-e] target
+usage: vanity_npub.py [-h] [-b BONUS_TARGETS] [-e] [-j NUM_JOBS] targets
 
 ********************** Nostr vanity pubkey generator **********************
 
@@ -63,7 +63,7 @@ optional arguments:
                         Additional targets to search for, but does not end execution when found (comma-separated, no spaces)
   -e, --include-end     Also search the end of the npub
   -j NUM_JOBS, --jobs NUM_JOBS
-                        Number of threads (default: 4)
+                        Number of threads (default: 2)
 ```
 
 ## Limitations

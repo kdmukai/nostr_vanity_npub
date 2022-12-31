@@ -115,7 +115,7 @@ if __name__ == "__main__":
                     default=2,
                     type=int,
                     dest="num_jobs",
-                    help="Number of threads (default: 4)")
+                    help="Number of threads (default: 2)")
 
     args = parser.parse_args()
     targets = args.targets.lower().split(",")
