@@ -95,9 +95,9 @@ Also note that you can stop a vanity `npub` search and restart it later. You're 
 
 
 ## Performance
-A 5-char vanity target could easily take tens of millions of tries. The script outputs an update at each million `npub`s tried so you can get a sense of what your brute force speed is like.
+A 5-char vanity target could easily take tens of millions of tries. 6-char targets are in the hundreds of millions of tries. The script outputs an update at each million `npub`s tried so you can get a sense of your machine's guessing rate.
 
-It's also to your advantage to add additional `targets` or `bonus_targets`. Each extra term only adds minimal additional effort; you're already doing the work to generate a random `npub` so you may as well check it for more than one possible match.
+It's also to your advantage to add additional `targets` or `bonus_targets`. You're already doing the work to generate a random `npub` so you may as well check it for more than one possible match. Each extra term only adds minimal additional effort.
 
 The biggest speed gain is to just open multiple terminal sessions and run an instance of `vanity_npub.py` in each one. Each instance will add more burden on the CPU but they don't seem to impact each others' performance much, as long as your CPU isn't completely slammed.
 
