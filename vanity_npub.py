@@ -42,7 +42,6 @@ class BruteForceThread(Thread):
         self.threadsafe_counter = threadsafe_counter
         self.event = event
         self.include_end = include_end
-        self.pk = None
 
 
     def run(self):
@@ -62,8 +61,8 @@ class BruteForceThread(Thread):
             for target in self.targets:
                 if npub[:len(target)] == target or (self.include_end and npub[-1*len(target):] == target):
                     # Found our match!
-                    print(f"\n{int(self.threadsafe_counter.cur_count):,} | {(time.time() - start):0.1f}s | npub1{npub}")
-                    self.pk = pk
+                    print(f"\n{int(self.threadsafe_counter.cur_count):,} | {(time.time() - start):0.1f}s | {target} | npub1{npub}")
+                    print(f"""\n\t{"*"*76}\n\tPrivate key: {pk.bech32()}\n\t{"*"*76}\n""", flush=True)
 
                     # Set the shared Event to signal to the other threads to exit
                     self.event.set()
@@ -156,8 +155,3 @@ if __name__ == "__main__":
     # Block until the first thread exits; after one thread finds a match, it will set the
     #   Event and all threads will exit.
     threads[0].join()            
-
-    for thread in threads:
-        if threads[i].pk is not None:
-            print(f"""\n\t{"*"*76}\n\tPrivate key: {threads[i].pk.bech32()}\n\t{"*"*76}\n""")
-            exit(0)
