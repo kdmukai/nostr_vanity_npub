@@ -14,11 +14,9 @@ npub1 <b>h0dl</b> 023acd...
 
 On success, it will print:
 ```
-371,748 | 37.2s | npub1h0dl0dkjp884wz3wd30ucvfvdfvfdzp626hlvp68v0lfngnscdjsuy8yqm
-
-        ****************************************************************************
-        Private key: nsec1uu85rpk7sw2u2vrr6s9vlyvt4u58tcnluelm48a3fuytytvt4lnsa7pe0e
-        ****************************************************************************
+h0dl | 371,748 | 37.2s
+npub1h0dl0dkjp884wz3wd30ucvfvdfvfdzp626hlvp68v0lfngnscdjsuy8yqm
+nsec1uu85rpk7sw2u2vrr6s9vlyvt4u58tcnluelm48a3fuytytvt4lnsa7pe0e
 ```
 
 This reports the number of `npubs` it brute-force generated in order to find one with a matching prefix, the elapsed time in seconds, the successful `npub`, and its associated private key/`nsec`.
@@ -28,7 +26,8 @@ This reports the number of `npubs` it brute-force generated in order to find one
 Search for "h0dl" at the beginning or the end of the `npub`:
 ```
 python3 vanity_npub.py -e h0dl
-> 1,026,042 | 103.0s | npub1y3ukxwznzysahdpnhrzgntal8kvmmd7uhx3k6klzzvaemm6nmwdse9h0dl
+h0dl | 1,026,042 | 103.0s
+npub1y3ukxwznzysahdpnhrzgntal8kvmmd7uhx3k6klzzvaemm6nmwdse9h0dl
 ```
 
 ## Example 3
@@ -44,9 +43,28 @@ Spend a lot of time searching for "nakam0t0", but along the way note any "h0dler
 python3 vanity_npub.py nakam0t0 -b h0dler,h0rnet
 ```
 
+## Example 5
+Search for "n0str" and two bonus matches and save all matches to a file named "keys.txt" in the home directory.
+```
+python3 vanity_npub.py n0str -b h0dl,w0rd -o ~/keys.txt
+```
+
+The output file will look something like this:
+```
+w0rd | 140,000 | 33.1s
+npub1w0rdgq59j02m2e0uz9avk2uvjhp8j88ysuydngg7v79alxphvs8qjegwv3
+nsec1kl5l82kt62ksnl5zukhpnfrqk4vds9uscvmgjl325zc7y7gfczcql2dy6p
+h0dl | 820,000 | 217.5s
+npub1h0dlr5ygfc5vuqjz2fdy37xgkg746pvxjt7z3449hldkhlhwj7ksxtngcg
+nsec1um5zkdaqvtzem6m7ec5783qfmrlnh3r30slhu0kg7egteulz7a0qctl97m
+n0str | 1,440,000 | 382.5s
+npub1n0strurwem7czj93jltau3jdmjqyn28tavxkgs6hgufycnurtnasvrnefx
+nsec1d70j929eh93ea7wglhlwdf2jw974w3yyxmw3zxsewd4szfmqya6qmu5ve7
+```
+
 ## Usage
 ```
-usage: vanity_npub.py [-h] [-b BONUS_TARGETS] [-e] [-j NUM_JOBS] targets
+usage: vanity_npub.py [-h] [-b BONUS_TARGETS] [-e] [-j NUM_JOBS] [-o OUTPUT_FILE] targets
 
 ********************** Nostr vanity pubkey generator **********************
 
@@ -64,6 +82,9 @@ optional arguments:
   -e, --include-end     Also search the end of the npub
   -j NUM_JOBS, --jobs NUM_JOBS
                         Number of threads (default: 2)
+  -o OUTPUT_FILE, --output-file OUTPUT_FILE
+                        Path to output file (default: None)
+
 ```
 
 ## Limitations
@@ -123,18 +144,14 @@ Long version: Assuming the pk calcs are trustworthy, it won't matter if two peop
 
 ```
 python3 vanity_npub.py hfsp
-> 365,386 | 36.3s | npub1hfspw0hcddc9k058ap4frvsexlykqzw3k2cun9430hxdvg8z9evqp5wfc8
->
->         ****************************************************************************
->         Private key: nsec1d7smkrh9z8pn28lv6vm5ad736ms44wx84z405hsph6q7v3vqju0qqum9ak
->         ****************************************************************************
+> hfsp | 365,386 | 36.3s
+> npub1hfspw0hcddc9k058ap4frvsexlykqzw3k2cun9430hxdvg8z9evqp5wfc8
+> nsec1d7smkrh9z8pn28lv6vm5ad736ms44wx84z405hsph6q7v3vqju0qqum9ak
 
 python3 vanity_npub.py hfsp
-> 792,574 | 80.0s | npub1hfsp4ue6z0ykvjg99df6s2nvw7xzw9677wx70ydhdqegatf0qkcs4yqht7
->
->         ****************************************************************************
->         Private key: nsec1949kx7knea9tcug9906u0l787vkxuha0yymh0vuu9x8xqmqvalaqk6lutn
->         ****************************************************************************
+> hfsp | 792,574 | 80.0s
+> npub1hfsp4ue6z0ykvjg99df6s2nvw7xzw9677wx70ydhdqegatf0qkcs4yqht7
+> nsec1949kx7knea9tcug9906u0l787vkxuha0yymh0vuu9x8xqmqvalaqk6lutn
 ```
 
 The `npub` is 58-characters long (not including the "npub1" prefix). That is more than enough randomness to make it effectively impossible for any two people to yield the exact same complete `npub` when searching for the same vanity prefix.

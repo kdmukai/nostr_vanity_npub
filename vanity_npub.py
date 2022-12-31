@@ -5,7 +5,7 @@
 """
 import datetime
 from threading import Event, Lock, Thread
-from typing import List
+from typing import List, Optional
 from nostr.key import PrivateKey
 
 
@@ -32,17 +32,31 @@ class ThreadsafeCounter:
         with self._lock:
             self.count = value
 
+class ThreadsafeFileOutput:
+    def __init__(self, path: str):
+        self.path = path
+        self._lock = Lock()
 
+    def write(self, output: str):
+        with self._lock:
+            with open(self.path, "a+") as file:
+                file.write(output)
 
 class BruteForceThread(Thread):
-    def __init__(self, targets: List[str], bonus_targets: List[str], threadsafe_counter: ThreadsafeCounter, event: Event, include_end: bool = False):
+    def __init__(self, targets: List[str], bonus_targets: List[str], threadsafe_counter: Optional[ThreadsafeFileOutput], threadsafe_file_output: ThreadsafeFileOutput, event: Event, include_end: bool = False):
         super().__init__(daemon=True)
         self.targets = targets
         self.bonus_targets = bonus_targets
         self.threadsafe_counter = threadsafe_counter
+        self.threadsafe_file_output = threadsafe_file_output
         self.event = event
         self.include_end = include_end
 
+    def handle_match(self, target: str, private_key: PrivateKey):
+        output = f"{target} | {int(self.threadsafe_counter.cur_count):,} | {(time.time() - start):0.1f}s\n{private_key.public_key.bech32()}\n{private_key.bech32()}\n"
+        print(output, flush=True)
+        if self.threadsafe_file_output:
+            self.threadsafe_file_output.write(output)
 
     def run(self):
         i = 0
@@ -55,14 +69,13 @@ class BruteForceThread(Thread):
             for target in self.bonus_targets:
                 if npub[:len(target)] == target or (self.include_end and npub[-1*len(target):] == target):
                     # Found one of our bonus targets!
-                    print(f"BONUS TARGET: {target}:\n\t{pk.public_key.bech32()}\n\t{pk.bech32()}", flush=True)
+                    self.handle_match(target, pk)
 
             # Now check our main targets
             for target in self.targets:
                 if npub[:len(target)] == target or (self.include_end and npub[-1*len(target):] == target):
                     # Found our match!
-                    print(f"\n{int(self.threadsafe_counter.cur_count):,} | {(time.time() - start):0.1f}s | {target} | npub1{npub}")
-                    print(f"""\n\t{"*"*76}\n\tPrivate key: {pk.bech32()}\n\t{"*"*76}\n""", flush=True)
+                    self.handle_match(target, pk)
 
                     # Set the shared Event to signal to the other threads to exit
                     self.event.set()
@@ -116,11 +129,18 @@ if __name__ == "__main__":
                     dest="num_jobs",
                     help="Number of threads (default: 2)")
 
+    parser.add_argument('-o', '--output-file',
+                    default=None,
+                    dest="output_file",
+                    help="Path to output file (default: None)")
+
+
     args = parser.parse_args()
     targets = args.targets.lower().split(",")
     bonus_targets = args.bonus_targets.lower().split(",") if args.bonus_targets else []
     include_end = args.include_end
     num_jobs = args.num_jobs
+    output_file = args.output_file
 
     print(targets)
     print(bonus_targets)
@@ -140,11 +160,12 @@ if __name__ == "__main__":
 
     start = time.time()
     threadsafe_counter = ThreadsafeCounter()
+    threadsafe_file_output = None if not output_file else ThreadsafeFileOutput(output_file)
     event = Event()
 
     threads = []
     for i in range(0, num_jobs):
-        brute_force_thread = BruteForceThread(targets, bonus_targets, threadsafe_counter=threadsafe_counter, event=event, include_end=include_end)
+        brute_force_thread = BruteForceThread(targets, bonus_targets, threadsafe_counter=threadsafe_counter, threadsafe_file_output=threadsafe_file_output, event=event, include_end=include_end)
         brute_force_thread.start()
         threads.append(brute_force_thread)
     
