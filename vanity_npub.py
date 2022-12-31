@@ -96,7 +96,7 @@ if __name__ == "__main__":
                         help="Also search the end of the npub")
 
     parser.add_argument('-j', '--jobs',
-                    default=4,
+                    default=2,
                     type=int,
                     dest="num_jobs",
                     help="Number of threads (default: 4)")

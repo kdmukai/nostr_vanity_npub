@@ -49,7 +49,7 @@ optional arguments:
   -h, --help         show this help message and exit
   -e, --include-end  Also search the end of the npub
   -j NUM_JOBS, --jobs NUM_JOBS
-                        Number of threads (default: 4)
+                        Number of threads (default: 2)
 ```
 
 ## Limitations
@@ -81,27 +81,23 @@ Also note that you can stop a vanity `npub` search and restart it later. You're 
 
 
 ## Performance
-Single-threaded on an M1 Macbook Pro:
+A 5-char vanity target could easily take tens of millions of tries. The script outputs an update at each million `npub`s tried so you can get a sense of what your brute force speed is like.
+
+The biggest speed gain is to just open multiple terminal sessions and run an instance of `vanity_npub.py` in each one. Each instance will add more burden on the CPU but they don't seem to impact each others' performance much, as long as your CPU isn't completely slammed.
+
+The built-in attempt to leverage multithreading using the `-j` command line option yielded only modest gains. Perhaps future improvements could make this more effective.
+
+M1 Macbook Pro showed no benefit from multithreading (j=1 or j=2) at around 104s/mil tries. Slowed down beyond j=2.
 ```
+# -j 1 or -j 2
 1876.9s: Tried 18,000,000 npubs so far
-1981.2s: Tried 19,000,000 npubs so far
-2085.5s: Tried 20,000,000 npubs so far
-2189.9s: Tried 21,000,000 npubs so far
+1981.2s: Tried 19,000,000 npubs so far (105s / mil)
+2085.5s: Tried 20,000,000 npubs so far (104s / mil)
+2189.9s: Tried 21,000,000 npubs so far (104s / mil)
 ```
 
-A 5-char vanity target could easily take tens of millions of tries.
+An older 8-core Ryzen 7 ran slightly faster at j=2 at around 160s/mil. Slowed down beyond j=2.
 
-Run with a `-j` setting that matches your CPU's threading abilities:
-```
-# Brute force w/eight threads
-python3 vanity_npub.py -j 8 n0str
-
-# Maximize threads on linux:
-python3 vanity_npub.py -j "$(($(nproc)+1))" n0str
-
-# Maximize threads on macOS:
-python3 vanity_npub.py -j "$(($(sysctl -n hw.physicalcpu)+1))" n0str
-```
 
 
 ## Is this secure?
