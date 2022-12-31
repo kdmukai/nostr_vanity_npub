@@ -31,6 +31,18 @@ python3 vanity_npub.py -e h0dl
 > 1,026,042 | 103.0s | npub1y3ukxwznzysahdpnhrzgntal8kvmmd7uhx3k6klzzvaemm6nmwdse9h0dl
 ```
 
+## Example 3
+Search for "h0dl" or "sat0shi":
+```
+# Exits on whichever one it finds first
+python3 vanity_npub.py h0dl,sat0shi
+```
+
+## Example 4
+Spend a lot of time searching for "nakam0t0", but along the way note any "h0dler" or "h0rnet" bonus matches:
+```
+python3 vanity_npub.py nakam0t0 -b h0dler,h0rnet
+```
 
 ## Usage
 ```
@@ -43,13 +55,15 @@ Search for `target` in an npub such that:
         npub1[target]acd023...
 
 positional arguments:
-  target             The string you're looking for
+  targets               The string(s) you're looking for (comma-separated, no spaces)
 
 optional arguments:
-  -h, --help         show this help message and exit
-  -e, --include-end  Also search the end of the npub
+  -h, --help            show this help message and exit
+  -b BONUS_TARGETS, --bonus_targets BONUS_TARGETS
+                        Additional targets to search for, but does not end execution when found (comma-separated, no spaces)
+  -e, --include-end     Also search the end of the npub
   -j NUM_JOBS, --jobs NUM_JOBS
-                        Number of threads (default: 2)
+                        Number of threads (default: 4)
 ```
 
 ## Limitations
@@ -82,6 +96,8 @@ Also note that you can stop a vanity `npub` search and restart it later. You're 
 
 ## Performance
 A 5-char vanity target could easily take tens of millions of tries. The script outputs an update at each million `npub`s tried so you can get a sense of what your brute force speed is like.
+
+It's also to your advantage to add additional `targets` or `bonus_targets`. Each extra term only adds minimal additional effort; you're already doing the work to generate a random `npub` so you may as well check it for more than one possible match.
 
 The biggest speed gain is to just open multiple terminal sessions and run an instance of `vanity_npub.py` in each one. Each instance will add more burden on the CPU but they don't seem to impact each others' performance much, as long as your CPU isn't completely slammed.
 
