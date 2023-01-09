@@ -160,7 +160,7 @@ if __name__ == "__main__":
 
     start = time.time()
     threadsafe_counter = ThreadsafeCounter()
-    threadsafe_file_output = None if not output_file else ThreadsafeFileOutput(output_file)
+    threadsafe_file_output = ThreadsafeFileOutput(output_file) if output_file is not None else None
     event = Event()
 
     threads = []
